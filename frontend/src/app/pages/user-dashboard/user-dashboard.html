@@ -1,0 +1,46 @@
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Booking history</p>
+    <h1>My Bookings</h1>
+  </div>
+  <a routerLink="/" class="btn-link">Browse Cars</a>
+</section>
+
+<p *ngIf="loading" class="empty-state">Loading your bookings...</p>
+
+<p *ngIf="!loading && error" class="err">{{ error }}</p>
+
+<p *ngIf="!loading && !error && bookings.length === 0" class="empty-state">
+  No bookings yet. <a routerLink="/">Browse cars</a>
+</p>
+
+<div class="table-wrap" *ngIf="bookings.length > 0">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Car</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of bookings">
+        <td>{{ b.carMake }} {{ b.carModel }}</td>
+        <td>{{ b.startDate }}</td>
+        <td>{{ b.endDate }}</td>
+        <td>&#8377;{{ b.totalAmount }}</td>
+        <td>
+          <span [class]="'badge ' + b.status.toLowerCase()">{{ b.status }}</span>
+        </td>
+        <td>
+          <button *ngIf="b.status === 'PENDING'" class="btn-sm danger" (click)="cancel(b.id)">
+            Cancel
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

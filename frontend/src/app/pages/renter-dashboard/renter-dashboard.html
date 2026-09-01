@@ -1,0 +1,132 @@
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Host workspace</p>
+    <h1>Renter Dashboard</h1>
+  </div>
+</section>
+
+<div class="tabs">
+  <button [class.active]="tab === 'cars'" (click)="tab = 'cars'">
+    My Cars ({{ cars.length }})
+  </button>
+  <button [class.active]="tab === 'bookings'" (click)="tab = 'bookings'">
+    Bookings ({{ bookings.length }})
+  </button>
+</div>
+
+<p *ngIf="msg" [class]="isError ? 'err' : 'ok'">{{ msg }}</p>
+
+<div *ngIf="tab === 'cars'">
+  <button class="btn-add" (click)="toggleForm()">
+    {{ showForm ? 'Cancel' : 'Add Car' }}
+  </button>
+
+  <div class="add-form" *ngIf="showForm">
+    <h3>Add New Car</h3>
+    <div class="form-row">
+      <input [(ngModel)]="newCar.make" placeholder="Make (e.g. Maruti)" />
+      <input [(ngModel)]="newCar.model" placeholder="Model (e.g. Swift)" />
+      <input [(ngModel)]="newCar.year" type="number" placeholder="Year" />
+      <input [(ngModel)]="newCar.pricePerDay" type="number" placeholder="Price/day (INR)" />
+      <select [(ngModel)]="newCar.fuelType">
+        <option>PETROL</option>
+        <option>DIESEL</option>
+        <option>ELECTRIC</option>
+        <option>HYBRID</option>
+      </select>
+      <select [(ngModel)]="newCar.transmission">
+        <option>MANUAL</option>
+        <option>AUTOMATIC</option>
+      </select>
+      <input [(ngModel)]="newCar.seatingCapacity" type="number" placeholder="Seats" />
+      <input [(ngModel)]="newCar.location" placeholder="Location" />
+      <input [(ngModel)]="newCar.color" placeholder="Color" />
+      <input [(ngModel)]="newCar.licensePlate" placeholder="License Plate" />
+      <input [(ngModel)]="newCar.imageData" placeholder="Image URL (optional)" />
+      <input type="file" accept="image/*" (change)="setImageFromFile($event)" />
+    </div>
+    <button (click)="addCar()">Submit Car</button>
+  </div>
+
+  <div class="table-wrap" *ngIf="cars.length > 0">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Year</th>
+          <th>Price/day</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of cars">
+          <td>{{ c.make }} {{ c.model }}</td>
+          <td>{{ c.year }}</td>
+          <td>&#8377;{{ c.pricePerDay }}</td>
+          <td>{{ c.location }}</td>
+          <td>
+            <span [class]="'badge ' + c.status.toLowerCase()">{{ c.status }}</span>
+          </td>
+          <td><button class="btn-sm danger" (click)="deleteCar(c.id)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p *ngIf="cars.length === 0" class="empty-state">No cars listed yet.</p>
+</div>
+
+<div *ngIf="tab === 'bookings'">
+  <div class="table-wrap" *ngIf="bookings.length > 0">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>User</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of bookings">
+          <td>{{ b.carMake }} {{ b.carModel }}</td>
+          <td>{{ b.userName }}</td>
+          <td>{{ b.startDate }}</td>
+          <td>{{ b.endDate }}</td>
+          <td>&#8377;{{ b.totalAmount }}</td>
+          <td>
+            <span [class]="'badge ' + b.status.toLowerCase()">{{ b.status }}</span>
+          </td>
+          <td>
+            <button
+              *ngIf="b.status === 'PENDING'"
+              class="btn-sm ok"
+              (click)="updateStatus(b.id, 'CONFIRMED')"
+            >
+              Confirm
+            </button>
+            <button
+              *ngIf="b.status === 'PENDING'"
+              class="btn-sm danger"
+              (click)="updateStatus(b.id, 'CANCELLED')"
+            >
+              Reject
+            </button>
+            <button
+              *ngIf="b.status === 'CONFIRMED'"
+              class="btn-sm"
+              (click)="updateStatus(b.id, 'COMPLETED')"
+            >
+              Complete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p *ngIf="bookings.length === 0" class="empty-state">No bookings yet.</p>
+</div>

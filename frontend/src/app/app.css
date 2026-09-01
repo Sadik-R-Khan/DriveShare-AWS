@@ -1,0 +1,107 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 60px;
+  padding: 0 1.5rem;
+  background: #01696f;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14);
+}
+
+nav > a {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.nav-links .username {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.85rem;
+}
+
+.nav-links button {
+  min-height: 34px;
+  padding: 0.35rem 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.nav-links button:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.btn-reg {
+  padding: 0.35rem 0.9rem;
+  background: white;
+  border-radius: 5px;
+  color: #01696f !important;
+  font-weight: 700;
+}
+
+main {
+  width: min(100%, 1140px);
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem;
+}
+
+@media (max-width: 700px) {
+  nav {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 0.8rem 1rem;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .nav-links .username {
+    max-width: 100%;
+  }
+
+  main {
+    padding: 1.25rem 1rem;
+  }
+}

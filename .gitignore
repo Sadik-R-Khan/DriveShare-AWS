@@ -1,0 +1,30 @@
+# Node / Angular
+frontend/nodes_modules/
+frontend/dist/
+npm-debug.log*
+
+#Java / Maven
+demo/target/
+demo/.mvn/timing/properties
+
+#Environment / Secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AWS / SSH keys
+*.pem
+
+# Logs
+*.log
+
+demo/src/main/resources/application.properties

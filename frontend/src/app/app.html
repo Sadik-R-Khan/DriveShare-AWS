@@ -1,0 +1,31 @@
+<nav>
+  <a routerLink="/">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#01696f" />
+      <path d="M6 20h20M8 20l2-6h12l2 6" stroke="white" stroke-width="2" stroke-linecap="round" />
+      <circle cx="11" cy="22" r="2" fill="white" />
+      <circle cx="21" cy="22" r="2" fill="white" />
+    </svg>
+    DriveEasy
+  </a>
+
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Cars</a>
+
+    <ng-container *ngIf="auth.isLoggedIn; else guest">
+      <a *ngIf="!auth.isRenter" routerLink="/bookings" routerLinkActive="active">My Bookings</a>
+      <a *ngIf="auth.isRenter" routerLink="/renter" routerLinkActive="active">My Fleet</a>
+      <span class="username">Hi, {{ auth.user?.name }}</span>
+      <button (click)="logout()">Logout</button>
+    </ng-container>
+
+    <ng-template #guest>
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register" class="btn-reg">Register</a>
+    </ng-template>
+  </div>
+</nav>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

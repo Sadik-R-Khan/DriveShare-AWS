@@ -1,0 +1,77 @@
+<p *ngIf="loading" class="empty-state">Loading car details...</p>
+
+<p *ngIf="!loading && loadError" class="empty-state">
+  {{ loadError }} <a routerLink="/">Browse cars</a>
+</p>
+
+<div *ngIf="car">
+  <button type="button" class="back-btn" routerLink="/">Back</button>
+
+  <section class="page-heading">
+    <div>
+      <p class="eyebrow">Book vehicle</p>
+      <h1>{{ car.make }} {{ car.model }}</h1>
+    </div>
+  </section>
+
+  <div class="detail-layout">
+    <div>
+      <img *ngIf="imageSrc()" [src]="imageSrc()" class="detail-img" [alt]="car.make" />
+      <div *ngIf="!imageSrc()" class="no-img-lg">No image available</div>
+      <table class="specs-table">
+        <tr>
+          <td>Year</td>
+          <td>{{ car.year }}</td>
+        </tr>
+        <tr>
+          <td>Fuel</td>
+          <td>{{ car.fuelType }}</td>
+        </tr>
+        <tr>
+          <td>Transmission</td>
+          <td>{{ car.transmission }}</td>
+        </tr>
+        <tr>
+          <td>Seats</td>
+          <td>{{ car.seatingCapacity }}</td>
+        </tr>
+        <tr>
+          <td>Color</td>
+          <td>{{ car.color }}</td>
+        </tr>
+        <tr>
+          <td>Location</td>
+          <td>{{ car.location }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <p class="muted-text">Listed by {{ car.renterName }}</p>
+      <h2 class="price-text">&#8377;{{ car.pricePerDay }} / day</h2>
+      <p *ngIf="car.description" class="description-text">{{ car.description }}</p>
+
+      <div class="booking-box">
+        <h3>Book This Car</h3>
+        <label>Pickup Date</label>
+        <input type="date" [(ngModel)]="startDate" [min]="today" />
+        <label>Return Date</label>
+        <input type="date" [(ngModel)]="endDate" [min]="startDate" />
+        <p *ngIf="days > 0" class="total">
+          {{ days }} day(s) x &#8377;{{ car.pricePerDay }} =
+          <strong>&#8377;{{ days * car.pricePerDay }}</strong>
+        </p>
+        <p *ngIf="conflictingBooking" class="err">This car is already booked for these dates.</p>
+        <p [class]="isError ? 'err' : 'ok'" *ngIf="msg">{{ msg }}</p>
+        <button
+          type="button"
+          (click)="book()"
+          [disabled]="days <= 0 || booking || conflictingBooking"
+        >
+          {{ booking ? 'Booking...' : 'Confirm Booking' }}
+        </button>
+        <a *ngIf="msg && !isError" routerLink="/bookings" class="booking-link">Go to My Bookings</a>
+      </div>
+    </div>
+  </div>
+</div>

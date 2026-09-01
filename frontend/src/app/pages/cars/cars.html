@@ -1,0 +1,32 @@
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Available cars</p>
+    <h1>Find your next rental</h1>
+  </div>
+</section>
+
+<div class="search-row">
+  <input
+    type="text"
+    [(ngModel)]="query"
+    placeholder="Search make, model, or city"
+    (keyup.enter)="search()"
+  />
+  <button type="button" (click)="search()">Search</button>
+  <button type="button" class="btn-secondary" *ngIf="query" (click)="clearSearch()">Clear</button>
+</div>
+
+<div class="grid">
+  <button type="button" class="card" *ngFor="let car of cars" (click)="go(car)">
+    <img *ngIf="imageSrc(car)" [src]="imageSrc(car)" [alt]="car.make" loading="lazy" />
+    <div *ngIf="!imageSrc(car)" class="no-img">No image</div>
+    <div class="card-body">
+      <h3>{{ car.make }} {{ car.model }} ({{ car.year }})</h3>
+      <p>{{ car.location }} | {{ car.transmission }} | {{ car.seatingCapacity }} seats</p>
+      <strong>&#8377;{{ car.pricePerDay }} / day</strong>
+      <span class="card-action">View and book</span>
+    </div>
+  </button>
+</div>
+
+<p *ngIf="cars.length === 0" class="empty-state">No cars found.</p>
