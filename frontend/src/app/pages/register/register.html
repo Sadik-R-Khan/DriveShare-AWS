@@ -1,6 +1,8 @@
 <div class="form-page">
   <h2>Register</h2>
-  <p class="err" *ngIf="error">{{ error }}</p>
+  @if (error) {
+    <p class="err">{{ error }}</p>
+  }
   <form (ngSubmit)="register()">
     <input type="text" [(ngModel)]="name" name="name" placeholder="Full Name" required />
     <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />

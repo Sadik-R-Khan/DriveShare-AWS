@@ -13,20 +13,29 @@
     (keyup.enter)="search()"
   />
   <button type="button" (click)="search()">Search</button>
-  <button type="button" class="btn-secondary" *ngIf="query" (click)="clearSearch()">Clear</button>
+  @if (query) {
+    <button type="button" class="btn-secondary" (click)="clearSearch()">Clear</button>
+  }
 </div>
 
 <div class="grid">
-  <button type="button" class="card" *ngFor="let car of cars" (click)="go(car)">
-    <img *ngIf="imageSrc(car)" [src]="imageSrc(car)" [alt]="car.make" loading="lazy" />
-    <div *ngIf="!imageSrc(car)" class="no-img">No image</div>
-    <div class="card-body">
-      <h3>{{ car.make }} {{ car.model }} ({{ car.year }})</h3>
-      <p>{{ car.location }} | {{ car.transmission }} | {{ car.seatingCapacity }} seats</p>
-      <strong>&#8377;{{ car.pricePerDay }} / day</strong>
-      <span class="card-action">View and book</span>
-    </div>
-  </button>
+  @for (car of carService.cars(); track car.id) {
+    <button type="button" class="card" (click)="go(car)">
+      @if (imageSrc(car)) {
+        <img [src]="imageSrc(car)" [alt]="car.make" loading="lazy" />
+      } @else {
+        <div class="no-img">No image</div>
+      }
+      <div class="card-body">
+        <h3>{{ car.make }} {{ car.model }} ({{ car.year }})</h3>
+        <p>{{ car.location }} | {{ car.transmission }} | {{ car.seatingCapacity }} seats</p>
+        <strong>&#8377;{{ car.pricePerDay }} / day</strong>
+        <span class="card-action">View and book</span>
+      </div>
+    </button>
+  }
 </div>
 
-<p *ngIf="cars.length === 0" class="empty-state">No cars found.</p>
+@if (carService.cars().length === 0) {
+  <p class="empty-state">No cars found.</p>
+}
