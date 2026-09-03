@@ -7,15 +7,15 @@ export const roleGuard: CanActivateFn = (route) => {
   const router = inject(Router);
   const expectedRole = route.data['role'];
 
-  if (!auth.isLoggedIn) {
+  if (!auth.isLoggedIn()) {
     return router.createUrlTree(['/login']);
   }
 
-  if (expectedRole === 'RENTER' && !auth.isRenter) {
+  if (expectedRole === 'RENTER' && !auth.isRenter()) {
     return router.createUrlTree(['/bookings']);
   }
 
-  if (expectedRole === 'USER' && auth.isRenter) {
+  if (expectedRole === 'USER' && auth.isRenter()) {
     return router.createUrlTree(['/renter']);
   }
 

@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { BookingService } from '../../booking';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './user-dashboard.html',
 })
 export class UserDashboardComponent implements OnInit {
-  bookings: any[] = [];
   loading = true;
   error = '';
 
-  constructor(private bookingService: BookingService) {}
+  constructor(public bookingService: BookingService) {}
 
   ngOnInit() {
     const createdBooking = history.state?.booking;
     if (createdBooking?.id) {
-      this.bookings = [createdBooking];
+      this.bookingService.myBookings.set([createdBooking]);
     }
 
     this.bookingService.getMine().subscribe({
       next: (b) => {
-        this.bookings = Array.isArray(b) && b.length > 0 ? b : this.bookings;
+        if (Array.isArray(b) && b.length > 0) {
+          this.bookingService.myBookings.set(b);
+        }
         this.loading = false;
       },
       error: (err) => {
@@ -39,13 +39,6 @@ export class UserDashboardComponent implements OnInit {
 
   cancel(id: number) {
     if (!confirm('Cancel this booking?')) return;
-    this.bookingService
-      .cancel(id)
-      .subscribe(
-        () =>
-          (this.bookings = this.bookings.map((b) =>
-            b.id === id ? { ...b, status: 'CANCELLED' } : b,
-          )),
-      );
+    this.bookingService.cancel(id).subscribe();
   }
 }
