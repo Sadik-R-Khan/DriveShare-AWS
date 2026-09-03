@@ -12,19 +12,17 @@
   <div class="nav-links">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Cars</a>
 
-    @if (auth.isLoggedIn()) {
-      @if (!auth.isRenter()) {
-        <a routerLink="/bookings" routerLinkActive="active">My Bookings</a>
-      }
-      @if (auth.isRenter()) {
-        <a routerLink="/renter" routerLinkActive="active">My Fleet</a>
-      }
-      <span class="username">Hi, {{ auth.user()?.name }}</span>
+    <ng-container *ngIf="auth.isLoggedIn; else guest">
+      <a *ngIf="!auth.isRenter" routerLink="/bookings" routerLinkActive="active">My Bookings</a>
+      <a *ngIf="auth.isRenter" routerLink="/renter" routerLinkActive="active">My Fleet</a>
+      <span class="username">Hi, {{ auth.user?.name }}</span>
       <button (click)="logout()">Logout</button>
-    } @else {
+    </ng-container>
+
+    <ng-template #guest>
       <a routerLink="/login">Login</a>
       <a routerLink="/register" class="btn-reg">Register</a>
-    }
+    </ng-template>
   </div>
 </nav>
 

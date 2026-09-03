@@ -1,37 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { CarService } from '../../car';
 
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './cars.html',
 })
 export class CarsComponent implements OnInit {
+  cars: any[] = [];
   query = '';
 
   constructor(
-    public carService: CarService,
+    private carService: CarService,
     private router: Router,
   ) {}
 
   ngOnInit() {
-    this.carService.loadAll();
+    this.load();
+  }
+
+  load() {
+    this.carService.getAll().subscribe((c) => (this.cars = c));
   }
 
   search() {
     if (!this.query.trim()) {
-      this.carService.loadAll();
+      this.load();
       return;
     }
-    this.carService.search(this.query).subscribe();
+    this.carService.search(this.query).subscribe((c) => (this.cars = c));
   }
 
   clearSearch() {
     this.query = '';
-    this.carService.loadAll();
+    this.load();
   }
 
   imageSrc(car: any) {

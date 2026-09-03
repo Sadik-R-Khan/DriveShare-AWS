@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarService } from '../../car';
 import { BookingService } from '../../booking';
@@ -7,10 +8,12 @@ import { RenterService } from '../../renter';
 @Component({
   selector: 'app-renter-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './renter-dashboard.html',
 })
 export class RenterDashboardComponent implements OnInit {
+  cars: any[] = [];
+  bookings: any[] = [];
   renter: any = null;
   tab = 'cars';
   showForm = false;
@@ -19,8 +22,8 @@ export class RenterDashboardComponent implements OnInit {
   newCar: any = this.emptyCar();
 
   constructor(
-    public carService: CarService,
-    public bookingService: BookingService,
+    private carService: CarService,
+    private bookingService: BookingService,
     private renterService: RenterService,
   ) {}
 
@@ -28,8 +31,8 @@ export class RenterDashboardComponent implements OnInit {
     this.renterService.getMyProfile().subscribe({
       next: (r) => {
         this.renter = r;
-        this.carService.loadByRenter(r.id);
-        this.bookingService.loadByRenter(r.id);
+        this.carService.getByRenter(r.id).subscribe((c) => (this.cars = c));
+        this.bookingService.getByRenter(r.id).subscribe((b) => (this.bookings = b));
       },
       error: () => {
         this.msg = 'Unable to load renter profile.';
@@ -43,7 +46,8 @@ export class RenterDashboardComponent implements OnInit {
     this.isError = false;
 
     this.carService.create(this.newCar).subscribe({
-      next: () => {
+      next: (c) => {
+        this.cars.push(c);
         this.newCar = this.emptyCar();
         this.showForm = false;
         this.msg = 'Car added successfully.';
@@ -57,11 +61,13 @@ export class RenterDashboardComponent implements OnInit {
 
   deleteCar(id: number) {
     if (!confirm('Delete this car?')) return;
-    this.carService.delete(id).subscribe();
+    this.carService.delete(id).subscribe(() => (this.cars = this.cars.filter((c) => c.id !== id)));
   }
 
   updateStatus(id: number, status: string) {
-    this.bookingService.updateStatus(id, status).subscribe();
+    this.bookingService
+      .updateStatus(id, status)
+      .subscribe((b) => (this.bookings = this.bookings.map((bk) => (bk.id === id ? b : bk))));
   }
 
   toggleForm() {

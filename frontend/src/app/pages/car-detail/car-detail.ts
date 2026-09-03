@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { timeout } from 'rxjs';
 import { CarService } from '../../car';
 import { BookingService } from '../../booking';
@@ -9,7 +10,7 @@ import { AuthService } from '../../auth';
 @Component({
   selector: 'app-car-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './car-detail.html',
 })
 export class CarDetailComponent implements OnInit {
@@ -99,7 +100,7 @@ export class CarDetailComponent implements OnInit {
   }
 
   private loadCarBookings() {
-    if (!this.auth.isLoggedIn() || this.auth.isRenter() || !this.car?.renterId) return;
+    if (!this.auth.isLoggedIn || this.auth.isRenter || !this.car?.renterId) return;
 
     this.bookingService.getByRenter(this.car.renterId).subscribe({
       next: (bookings) =>
@@ -113,11 +114,11 @@ export class CarDetailComponent implements OnInit {
     this.isError = false;
     this.booking = false;
 
-    if (!this.auth.isLoggedIn()) {
+    if (!this.auth.isLoggedIn) {
       this.router.navigate(['/login']);
       return;
     }
-    if (this.auth.isRenter()) {
+    if (this.auth.isRenter) {
       this.msg = 'Renters cannot book cars.';
       this.isError = true;
       return;
